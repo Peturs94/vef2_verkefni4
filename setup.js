@@ -11,23 +11,23 @@ const readFileAsync = util.promisify(fs.readFile);
 
 async function main() {
   console.info(`Set upp gagnagrunn á ${connectionString}`);
-  // droppa töflum ef til
+  // droppa töflu ef til
   await query('DROP TABLE IF EXISTS todos');
-  console.info('Töflum eytt');
+  console.info('Töflu eytt');
 
   // búa til töflur út frá skema
   try {
-    const createTable = await readFileAsync('./schema.sql');
+    const createTable = await readFileAsync('./sql/schema.sql');
     await query(createTable.toString('utf8'));
-    console.info('Töflur búnar til');
+    console.info('Tafla búnin til');
   } catch (e) {
-    console.error('Villa við að búa til töflur:', e.message);
+    console.error('Villa við að búa til töflu:', e.message);
     return;
   }
 
   // bæta færslum við töflur
   try {
-    const insert = await readFileAsync('./insert.sql');
+    const insert = await readFileAsync('./sql/insert.sql');
     await query(insert.toString('utf8'));
     console.info('Gögnum bætt við');
   } catch (e) {

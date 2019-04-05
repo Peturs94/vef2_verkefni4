@@ -1,84 +1,103 @@
-const express = require('express');
-const { getList, findByID, insertAssignment, updateByID, deletByID } = require('./todos');
+/** @module api */
 
-/* todo importa frá todos.js */
+const express = require('express');
+
+const {
+  listTodos,
+  createTodo,
+  readTodo,
+  updateTodo,
+  deleteTodo,
+} = require('./todos');
 
 const router = express.Router();
 
+/**
+ * Higher-order fall sem umlykur async middleware með villumeðhöndlun.
+ *
+ * @param {function} fn Middleware sem grípa á villur fyrir
+ * @returns {function} Middleware með villumeðhöndlun
+ */
 function catchErrors(fn) {
   return (req, res, next) => fn(req, res, next).catch(next);
 }
 
 /**
- * Middleware sem býr til nýja færslu via post request og skilar ef færsla er röng.
- * @param {object} req request object
- * @param {Object} res respond object
+ * Route handler fyrir lista af todods gegnum GET.
+ *
+ * @param {object} req Request hlutur
+ * @param {object} res Response hlutur
+ * @returns {array} Fylki af todos
  */
+async function listRoute(req, res) {
+  const { completed, order } = req.query;
 
-async function post(req, res) {
-  const { title, position, completed, due } = req.body;
-  const result = await insertAssignment(title, position, completed, due);
+  const todos = await listTodos(order, completed);
+
+  return res.json(todos);
+}
+
+/**
+ * Route handler til að búa til todo gegnum POST.
+ *
+ * @param {object} req Request hlutur
+ * @param {object} res Response hlutur
+ * @returns {object} Todo sem búið var til eða villur
+ */
+async function createRoute(req, res) {
+  const { title, due, position } = req.body;
+
+  const result = await createTodo({ title, due, position });
+
+  if (!result.success) {
+    return res.status(400).json(result.validation);
+  }
+
+  return res.status(201).json(result.item);
+}
+
+/**
+ * Route handler fyrir stakt todo gegnum GET.
+ *
+ * @param {object} req Request hlutur
+ * @param {object} res Response hlutur
+ * @returns {object} Todo eða villa
+ */
+async function todoRoute(req, res) {
+  const { id } = req.params;
+
+  if (id === '' || !Number.isInteger(Number(id))) {
+    return res.status(404).json({ error: 'Item not found' });
+  }
+
+  const todo = await readTodo(id);
+
+  if (todo) {
+    return res.json(todo);
+  }
+
+  return res.status(404).json({ error: 'Item not found' });
+}
+
+/**
+ * Route handler til að breyta todo gegnum PATCH.
+ *
+ * @param {object} req Request hlutur
+ * @param {object} res Response hlutur
+ * @returns {object} Breytt todo eða villa
+ */
+async function patchRoute(req, res) {
+  const { id } = req.params;
+  const { title, due, position, completed } = req.body;
+
+  const item = { title, due, position, completed };
+
+  const result = await updateTodo(id, item);
 
   if (!result.success && result.validation.length > 0) {
     return res.status(400).json(result.validation);
   }
-  return res.status(200).json(result.item);
-}
 
-/**
- * Middleware sem nær í gögnin og útfærir sem lista
- * @param {object} req Request object
- * @param {object} res Response object
- */
-
-async function listRouter(req, res) {
-  const { order, completed } = req.query;
-  const result = await getList(completed, order);
-  res.status(200).json(result);
-}
-
-/**
- * Middleware sem nær í gögnin ef id
- * @param {object} req Request object
- * @param {object} res Response object
- */
-
-async function findID(req, res) {
-  const { id } = req.params;
-  const result = await findByID(parseInt(id, 10));
-
-  if (!result.success && result.notFound) {
-    return res.status(404).json({ error: 'Item not found' });
-  }
-  if (!result.success && result.length === 0) {
-    return res.status(400).json({ error: 'Verkefnið er ekki til' });
-  }
-  return res.status(200).json(result);
-}
-
-/**
- * Middleware sem uppfærir gögn
- * 
- * Title, string verða að vera á milli 1-128 stafir
- * 
- * Due veður að vera á ISO 8601 formatti
- * 
- * position verður að vera int
- * 
- * completed verður að vera bool
- * 
- * @param {object} req Request object
- * @param {object} res Response object
- */
-
-async function updateID(req, res) {
-  const { id } = req.params;
-  const { title, position, completed, due } = req.body;
-  const result = await updateByID(parseInt(id, 10), { title, position, completed, due });
-
-  if (!result.success && result.validation.length > 0) {
-    return res.status(400).json(result.validation);
-  }
   if (!result.success && result.notFound) {
     return res.status(404).json({ error: 'Item not found' });
   }
@@ -87,27 +106,28 @@ async function updateID(req, res) {
 }
 
 /**
- * Middleware sem fer með eyðslu(delete) request
- * 
- * @param {object} req Request object
- * @param {object} res Response object
+ * Route handler til að eyða todo gegnum DELETE.
+ *
+ * @param {object} req Request hlutur
+ * @param {object} res Response hlutur
+ * @returns {object} Engu ef eytt, annars villu
  */
-
-async function deleteItem(req, res) {
+async function deleteRoute(req, res) {
   const { id } = req.params;
 
-  const result = await deletByID(parseInt(id, 10));
+  const deleted = await deleteTodo(id);
 
-  if (!result.success && result.notFound) {
-    return res.status(404).json({ error: 'Item not found' });
+  if (deleted) {
+    return res.status(204).json({});
   }
-  return res.status(204).end();
+
+  return res.status(404).json({ error: 'Item not found' });
 }
 
-router.get('/', catchErrors(listRouter));
-router.post('/', catchErrors(post));
-router.get('/:id', catchErrors(findID));
-router.patch('/:id', catchErrors(updateID));
-router.delete('/:id', catchErrors(deleteItem));
+router.get('/', catchErrors(listRoute));
+router.get('/:id', catchErrors(todoRoute));
+router.post('/', catchErrors(createRoute));
+router.patch('/:id', catchErrors(patchRoute));
+router.delete('/:id', catchErrors(deleteRoute));
 
 module.exports = router;

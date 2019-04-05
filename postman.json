@@ -1,0 +1,745 @@
+{
+	"info": {
+		"name": "v4",
+		"_postman_id": "23108e24-3c81-3bb9-6bcb-9b03db001008",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET /",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7c703c96-78a7-42f4-8f24-424c92b9e09a",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has 5 items order by position asc\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.length).to.eql(5);",
+							"    pm.expect(result[0].id).to.eql(1);",
+							"    pm.expect(result[4].id).to.eql(5);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET /1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "04b4d0bc-4196-48ba-bbba-fd1a944b570b",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has item with id 1\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.id).to.eql(1);",
+							"    pm.expect(result.title).to.eql('Skrá í vefforritun 2');",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"1"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET /6",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "86dc05f4-302a-4f10-a314-24c071008ffd",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"Does not have an item with id 6\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.error).to.eql('Item not found');",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"6"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET /?order=desc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3dd88205-503c-497a-ad6e-1d88216a4fd2",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has 5 items order by position desc\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.length).to.eql(5);",
+							"    pm.expect(result[0].id).to.eql(5);",
+							"    pm.expect(result[4].id).to.eql(1);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/?order=desc",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "order",
+							"value": "desc",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET /?completed=false",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9b424303-fac8-44e1-bde1-31e0fb54128f",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has 4 incomplete items ordered by position asc\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.length).to.eql(4);",
+							"    pm.expect(result[0].id).to.eql(2);",
+							"    pm.expect(result[3].id).to.eql(5);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/?completed=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "completed",
+							"value": "false",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET /?completed=true",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "469e535e-da32-406c-8605-fc0c1018796b",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has 1 complete item\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.length).to.eql(1);",
+							"    pm.expect(result[0].id).to.eql(1);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/?completed=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "completed",
+							"value": "true",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET /?completed=foo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8f62771d-6d68-4e01-bd20-0168d6708636",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Does not filter if string is not true or false\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.length).to.eql(5);",
+							"    pm.expect(result[0].id).to.eql(1);",
+							"    pm.expect(result[4].id).to.eql(5);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/?completed=foo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "completed",
+							"value": "foo",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET /?completed=false&order=desc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "80cf7734-5c00-422d-ae54-a4ef7788edf3",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has 4 incomplete items ordered by position desc\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.length).to.eql(4);",
+							"    pm.expect(result[0].id).to.eql(5);",
+							"    pm.expect(result[3].id).to.eql(2);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/?completed=false&order=desc",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "completed",
+							"value": "false",
+							"equals": true
+						},
+						{
+							"key": "order",
+							"value": "desc",
+							"equals": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST / w/empty",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a06eede6-79a2-458f-b6fb-5131431823af",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Validates empty title\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.length).to.eql(1);",
+							"    pm.expect(result[0].field).to.eql('title');",
+							"    pm.expect(result[0].message).to.eql('Titill verður að vera strengur sem er 1 til 128 stafir');",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST / w/title too long",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a06eede6-79a2-458f-b6fb-5131431823af",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Validates empty title\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.length).to.eql(1);",
+							"    pm.expect(result[0].field).to.eql('title');",
+							"    pm.expect(result[0].message).to.eql('Titill verður að vera strengur sem er 1 til 128 stafir');",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST / w/invalid due, number",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c16580ee-8ff5-4518-b43f-c9b945328aad",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"Validates invalid due\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.length).to.eql(1);",
+							"    pm.expect(result[0].field).to.eql('due');",
+							"    pm.expect(result[0].message).to.eql('Dagsetning verður að vera gild ISO 8601 dagsetning');",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"asdf\",\n\t\"due\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST / valid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0e165c7d-0941-4751-bcbc-992169f22e16",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Creates item\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.id).to.eql(6);",
+							"    pm.expect(result.title).to.eql('Prufufærsla');",
+							"    pm.expect(result.completed).to.eql(false);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Prufufærsla\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET /6 now exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f5a0bc65-d9c3-4a8f-b27f-388269fed4ee",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has item with id 6\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.id).to.eql(6);",
+							"    pm.expect(result.title).to.eql('Prufufærsla');",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"6"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /7",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c646ac85-fd53-431b-80c7-663054bcf4b9",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/8",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"8"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /6",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ac311e09-d83b-4144-a158-9342e09e9e38",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:3000/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"6"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH /2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "79bbc7f3-358b-4ac9-88b0-048ca1025d23",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Updates correctly\", function () {",
+							"    const result = pm.response.json();",
+							"    pm.expect(result.id).to.eql(2);",
+							"    pm.expect(result.title).to.eql('Sækja verkefni 4 á github!');",
+							"    pm.expect(result.completed).to.eql(true);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\": \"Sækja verkefni 4 á github!\",\n\t\"completed\": true\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"2"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

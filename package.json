@@ -8,23 +8,26 @@
     "start": "node app.js",
     "eslint": "eslint *.js",
     "test": "npm run eslint",
-    "setup": "node setup.js"
+    "setup": "node setup.js",
+    "jsdoc": "jsdoc *.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "dotenv": "6.2.0",
+    "es6-promise": "^4.2.6",
     "express": "4.16.4",
+    "isomorphic-fetch": "^2.2.1",
     "pg": "7.8.0",
-    "xss": "^1.0.3",
-    "validator": "^10.11.0",
-    "save": "^2.3.3"
+    "validator": "10.11.0",
+    "xss": "1.0.3"
   },
   "devDependencies": {
     "eslint": "5.14.1",
     "eslint-config-airbnb-base": "13.1.0",
     "eslint-plugin-import": "2.16.0",
+    "jsdoc": "^3.5.5",
     "nodemon": "1.18.10"
   }
 }
